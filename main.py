@@ -8,10 +8,10 @@ app = QtWidgets.QApplication(sys.argv)
 first_window = QtWidgets.QWidget()
 
 # Set window size
-first_window.resize(400, 300)
+first_window.resize(400, 340)
 
 # Set the form title
-first_window.setWindowTitle("The first pyqt program")
+first_window.setWindowTitle("The second pyqt program")
 
 # Show form
 first_window.show()
