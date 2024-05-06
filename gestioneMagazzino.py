@@ -9,6 +9,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import mysql
+import mysql.connector
+from PyQt5.QtSql import QSqlQueryModel
+from PyQt5.QtWidgets import QTableWidgetItem
+
 import Resources.icons
 
 class Ui_Dialog(object):
@@ -16,10 +21,12 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.resize(782, 660)
         Dialog.setStyleSheet("background-color: rgb(159, 197, 248);")
-        self.tableMagazzino = QtWidgets.QTableView(Dialog)
+        self.tableMagazzino = QtWidgets.QTableWidget(Dialog)
         self.tableMagazzino.setGeometry(QtCore.QRect(10, 10, 511, 571))
         self.tableMagazzino.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableMagazzino.setObjectName("tableMagazzino")
+        self.tableMagazzino.setRowCount(0)
+        self.tableMagazzino.setColumnCount(9)
         self.btIndietro = QtWidgets.QPushButton(Dialog)
         self.btIndietro.setGeometry(QtCore.QRect(10, 600, 51, 51))
         self.btIndietro.setStyleSheet("\n"
@@ -75,6 +82,8 @@ class Ui_Dialog(object):
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.init_db()
+        self.load_data_tabella()
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -85,6 +94,34 @@ class Ui_Dialog(object):
         self.btInserisciElemento.setText(_translate("Dialog", "Inserisci elemento"))
         self.btModificaElemento.setText(_translate("Dialog", "Modifica elemento"))
         self.btRimuoviElemento.setText(_translate("Dialog", "Elimina elemento"))
+
+    def init_db(self):
+        self.db = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="alessio",
+            database="mydbristorante"
+        )
+        self.model = QSqlQueryModel()
+        self.cursor = self.db.cursor()
+
+    def load_data_tabella(self):
+        cur = self.cursor
+        query = "SELECT * FROM elementomagazzino"
+        cur.execute(query)
+        result = cur.fetchall()
+        self.tableMagazzino.setRowCount(0)
+        for row_number, row_data in enumerate(result):
+            print(row_number)
+            self.tableMagazzino.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+
+
+
+
+
+
 if __name__ == "__main__":
             import sys
             app = QtWidgets.QApplication(sys.argv)
