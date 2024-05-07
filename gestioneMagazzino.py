@@ -22,7 +22,7 @@ class Ui_Dialog(object):
         Dialog.resize(782, 660)
         Dialog.setStyleSheet("background-color: rgb(159, 197, 248);")
         self.tableMagazzino = QtWidgets.QTableWidget(Dialog)
-        self.tableMagazzino.setGeometry(QtCore.QRect(10, 10, 511, 571))
+        self.tableMagazzino.setGeometry(QtCore.QRect(10, 10, 520, 571))
         self.tableMagazzino.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableMagazzino.setObjectName("tableMagazzino")
         self.tableMagazzino.setRowCount(0)
@@ -79,9 +79,9 @@ class Ui_Dialog(object):
         self.btRimuoviElemento.setFont(font)
         self.btRimuoviElemento.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btRimuoviElemento.setObjectName("btRimuoviElemento")
-
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.tableMagazzino.setHorizontalHeaderLabels(["Nome", "Prezzo", "Quantità", "Data di scadenza", "Fornitore"])
         self.init_db()
         self.load_data_tabella()
 
@@ -107,7 +107,9 @@ class Ui_Dialog(object):
 
     def load_data_tabella(self):
         cur = self.cursor
-        query = "SELECT * FROM elementomagazzino"
+        query = """select nome, prezzo, quantita, scadenza, fornitore, id
+        from elementomagazzino inner join nomeelemento
+        on elementomagazzino.idNomeElemento = nomeelemento.id"""
         cur.execute(query)
         result = cur.fetchall()
         self.tableMagazzino.setRowCount(0)
@@ -115,7 +117,13 @@ class Ui_Dialog(object):
             print(row_number)
             self.tableMagazzino.insertRow(row_number)
             for column_number, data in enumerate(row_data):
-                self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+                print(f"{data}, {column_number}")
+                if column_number == 1:
+                    self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem("€"+str(data)))
+                elif column_number == 5:
+                    pass
+                else:
+                    self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem(str(data)))
 
 
 
