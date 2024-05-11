@@ -81,9 +81,11 @@ class Ui_Dialog(object):
         self.btRimuoviElemento.setObjectName("btRimuoviElemento")
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.tableMagazzino.setColumnCount(6)
         self.tableMagazzino.setHorizontalHeaderLabels(["id", "Nome", "Prezzo", "Quantità", "Data di scadenza", "Fornitore"])
         self.init_db()
         self.load_data_tabella()
+
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -94,6 +96,7 @@ class Ui_Dialog(object):
         self.btInserisciElemento.setText(_translate("Dialog", "Inserisci elemento"))
         self.btModificaElemento.setText(_translate("Dialog", "Modifica elemento"))
         self.btRimuoviElemento.setText(_translate("Dialog", "Elimina elemento"))
+        self.tableMagazzino.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
 
     def init_db(self):
         self.db = mysql.connector.connect(
@@ -118,10 +121,11 @@ class Ui_Dialog(object):
             self.tableMagazzino.insertRow(row_number)
             for column_number, data in enumerate(row_data):
                 print(f"{data}, {column_number}")
-                if column_number == 1:
+                if column_number == 2:
                     self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem("€"+str(data)))
                 else:
                     self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+        self.tableMagazzino.resizeColumnsToContents()
 
 
 
