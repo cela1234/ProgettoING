@@ -81,7 +81,7 @@ class Ui_Dialog(object):
         self.btRimuoviElemento.setObjectName("btRimuoviElemento")
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
-        self.tableMagazzino.setHorizontalHeaderLabels(["Nome", "Prezzo", "Quantità", "Data di scadenza", "Fornitore"])
+        self.tableMagazzino.setHorizontalHeaderLabels(["id", "Nome", "Prezzo", "Quantità", "Data di scadenza", "Fornitore"])
         self.init_db()
         self.load_data_tabella()
 
@@ -107,7 +107,7 @@ class Ui_Dialog(object):
 
     def load_data_tabella(self):
         cur = self.cursor
-        query = """select nome, prezzo, quantita, scadenza, fornitore, id
+        query = """select elementomagazzino.id, nome, prezzo, quantita, scadenza, fornitore
         from elementomagazzino inner join nomeelemento
         on elementomagazzino.idNomeElemento = nomeelemento.id"""
         cur.execute(query)
@@ -120,8 +120,6 @@ class Ui_Dialog(object):
                 print(f"{data}, {column_number}")
                 if column_number == 1:
                     self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem("€"+str(data)))
-                elif column_number == 5:
-                    pass
                 else:
                     self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem(str(data)))
 
