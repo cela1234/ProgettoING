@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import mysql
 import mysql.connector
 from PyQt5.QtSql import QSqlQueryModel
-from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidgetItem, QMainWindow, QPushButton, QMessageBox
 
 import Resources.icons
 
@@ -80,6 +80,7 @@ class Ui_Dialog(object):
         self.btRimuoviElemento.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btRimuoviElemento.setObjectName("btRimuoviElemento")
         self.retranslateUi(Dialog)
+        self.btRimuoviElemento.clicked.connect(self.btRimuoviClicked)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.tableMagazzino.setColumnCount(6)
         self.tableMagazzino.setHorizontalHeaderLabels(["id", "Nome", "Prezzo", "Quantità", "Data di scadenza", "Fornitore"])
@@ -127,7 +128,28 @@ class Ui_Dialog(object):
                     self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem(str(data)))
         self.tableMagazzino.resizeColumnsToContents()
 
+    def btRimuoviClicked(self):
+        selectedRow = self.tableMagazzino.currentRow()
+        if selectedRow == -1:
+            dlg = QMessageBox()
+            dlg.setWindowTitle("Errore")
+            dlg.setText("Non hai selezionato nessun elemento!")
+            dlg.setStandardButtons(QMessageBox.Ok)
+            dlg.exec()
+        else:
+            dlg = QMessageBox()
+            dlg.setWindowTitle("Eliminazione elemento magazzino")
+            dlg.setText(f"Sicuro di voler eliminare l'elemento del magazzino con nome: {self.tableMagazzino.item(selectedRow, 1).text()} del fornitore {self.tableMagazzino.item(selectedRow, 5).text()}")
+            cur = self.cursor
+            dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            dlg.setIcon(QMessageBox.Warning)
+            button = dlg.exec()
 
+            if button == QMessageBox.Yes:
+                query = f"DELETE FROM elementomagazzino WHERE id = {self.tableMagazzino.item(selectedRow, 0).text()}"
+                cur.execute(query)
+                self.db.commit()
+            self.load_data_tabella()
 
 
 
