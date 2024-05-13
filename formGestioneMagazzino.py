@@ -135,6 +135,7 @@ class Ui_Dialog(object):
             dlg.setWindowTitle("Errore")
             dlg.setText("Non hai selezionato nessun elemento!")
             dlg.setStandardButtons(QMessageBox.Ok)
+            dlg.setIcon(QMessageBox.Critical)
             dlg.exec()
         else:
             dlg = QMessageBox()
