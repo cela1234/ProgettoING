@@ -331,6 +331,9 @@ class Ui_formAmministratore(object):
         self.line.raise_()
         self.btMagazzino.raise_()
 
+        self.btMagazzino.clicked.connect(self.btMagazzinoClicked)
+
+
         self.retranslateUi(formAmministratore)
         QtCore.QMetaObject.connectSlotsByName(formAmministratore)
 
@@ -346,6 +349,17 @@ class Ui_formAmministratore(object):
         self.btPrenotazioni.setText(_translate("formAmministratore", "Gestione delle prenotazioni"))
         self.btFatture.setText(_translate("formAmministratore", "Gestione delle fatture"))
         self.btLogout.setText(_translate("formAmministratore", "Log Out"))
+
+
+    def btMagazzinoClicked(self):
+        import formGestioneMagazzino
+        self.formGestioneMagazzino = QtWidgets.QDialog()
+        self.uiMagazzino = formGestioneMagazzino.Ui_formMagazzino()
+        self.uiMagazzino.setupUi(self.formGestioneMagazzino)
+        self.formGestioneMagazzino.show()
+
+
+
 if __name__ == "__main__":
             import sys
             app = QtWidgets.QApplication(sys.argv)
