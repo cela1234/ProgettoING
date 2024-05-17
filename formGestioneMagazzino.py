@@ -13,11 +13,11 @@ import mysql
 import mysql.connector
 from PyQt5.QtSql import QSqlQueryModel
 from PyQt5.QtWidgets import QTableWidgetItem, QMainWindow, QPushButton, QMessageBox
-
-import Resources.icons
+from gestioneNomi import Ui_Dialog
 
 class Ui_formMagazzino(object):
-    def setupUi(self, formMagazzino):
+
+    def setupUi(self, formMagazzino, parent):
         formMagazzino.setObjectName("Dialog")
         formMagazzino.resize(782, 660)
         formMagazzino.setStyleSheet("background-color: rgb(159, 197, 248);")
@@ -28,9 +28,10 @@ class Ui_formMagazzino(object):
         self.tableMagazzino.setRowCount(0)
         self.tableMagazzino.setColumnCount(9)
         self.btIndietro = QtWidgets.QPushButton(formMagazzino)
+        self.btIndietro.clicked.connect(lambda: self.btIndietroClicked(parent))
         self.btIndietro.setGeometry(QtCore.QRect(10, 600, 51, 51))
         self.btIndietro.setStyleSheet("\n"
-"image: url(:/icone/Icons/arrow-left.svg);")
+                                      "image: url(:/icone/Icons/arrow-left.svg);")
         self.btIndietro.setText("")
         self.btIndietro.setObjectName("btIndietro")
         self.line = QtWidgets.QFrame(formMagazzino)
@@ -90,6 +91,7 @@ class Ui_formMagazzino(object):
         self.btVisualizzaTabellaNomi.setFont(font)
         self.btVisualizzaTabellaNomi.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btVisualizzaTabellaNomi.setObjectName("btVisualizzaTabellaNomi")
+        self.btVisualizzaTabellaNomi.clicked.connect(self.btTabellaNomiClicked)
         QtCore.QMetaObject.connectSlotsByName(formMagazzino)
         self.retranslateUi(formMagazzino)
         self.init_db()
@@ -101,7 +103,7 @@ class Ui_formMagazzino(object):
         Dialog.setWindowTitle(_translate("Dialog", "Gestione magazzino - Admin"))
         self.txtCerca.setPlaceholderText(_translate("Dialog", "Cerca"))
         #self.btMostraDettaglio.setText(_translate("Dialog", "Mostra informazioni dell\'\n"
-#"elemento selezionato"))
+        #"elemento selezionato"))
         self.btInserisciElemento.setText(_translate("Dialog", "Inserisci elemento"))
         self.btModificaElemento.setText(_translate("Dialog", "Modifica elemento"))
         self.btRimuoviElemento.setText(_translate("Dialog", "Elimina elemento"))
@@ -137,6 +139,18 @@ class Ui_formMagazzino(object):
                     self.tableMagazzino.setItem(row_number, column_number, QTableWidgetItem(str(data)))
         self.tableMagazzino.resizeColumnsToContents()
 
+    def btTabellaNomiClicked(self):
+        # apre la seconda finestra
+        self.formGestioneNomi = QtWidgets.QDialog()
+        self.uiMagazzino = Ui_Dialog()
+        self.uiMagazzino.setupUi(self.formGestioneNomi, formGestioneMagazzino)
+        self.formGestioneNomi.show()
+    def btIndietroClicked(self, window):
+        window.show()
+        self.db.close()
+
+
+
     def btRimuoviClicked(self):
         selectedRow = self.tableMagazzino.currentRow()
         if selectedRow == -1:
@@ -164,12 +178,13 @@ class Ui_formMagazzino(object):
 
 
 
+
 if __name__ == "__main__":
             import sys
             app = QtWidgets.QApplication(sys.argv)
             formGestioneMagazzino = QtWidgets.QDialog()
             ui = (Ui_formMagazzino())
-            ui.setupUi(formGestioneMagazzino)
+            ui.setupUi(formGestioneMagazzino, None)
             formGestioneMagazzino.show()
             sys.exit(app.exec_())
 

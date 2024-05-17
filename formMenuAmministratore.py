@@ -355,8 +355,9 @@ class Ui_formAmministratore(object):
         import formGestioneMagazzino
         self.formGestioneMagazzino = QtWidgets.QDialog()
         self.uiMagazzino = formGestioneMagazzino.Ui_formMagazzino()
-        self.uiMagazzino.setupUi(self.formGestioneMagazzino)
+        self.uiMagazzino.setupUi(self.formGestioneMagazzino, formAmm)
         self.formGestioneMagazzino.show()
+        formAmm.hide()
 
 
 

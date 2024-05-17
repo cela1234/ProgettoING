@@ -9,29 +9,37 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import mysql
+import mysql.connector
+from PyQt5.QtSql import QSqlQueryModel
+from PyQt5.QtWidgets import QTableWidgetItem, QMainWindow, QPushButton, QMessageBox
+import Resources.icons
 
 
 class Ui_Dialog(object):
-    def setupUi(self, Dialog):
+    def chiudiMain(self):
+        pass
+
+    def setupUi(self, Dialog, Parent):
         Dialog.setObjectName("Dialog")
         Dialog.resize(520, 540)
         Dialog.setStyleSheet("background-color: rgb(159, 197, 248);")
-        self.tableWidget = QtWidgets.QTableWidget(Dialog)
-        self.tableWidget.setGeometry(QtCore.QRect(10, 10, 501, 381))
-        self.tableWidget.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(5)
-        self.tableWidget.setRowCount(0)
+        self.tableNomi = QtWidgets.QTableWidget(Dialog)
+        self.tableNomi.setGeometry(QtCore.QRect(10, 10, 501, 381))
+        self.tableNomi.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.tableNomi.setObjectName("tableNomi")
+        self.tableNomi.setColumnCount(5)
+        self.tableNomi.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(0, item)
+        self.tableNomi.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(1, item)
+        self.tableNomi.setHorizontalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(2, item)
+        self.tableNomi.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(3, item)
+        self.tableNomi.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(4, item)
+        self.tableNomi.setHorizontalHeaderItem(4, item)
         self.btInserisciNome = QtWidgets.QPushButton(Dialog)
         self.btInserisciNome.setGeometry(QtCore.QRect(10, 400, 161, 51))
         font = QtGui.QFont()
@@ -67,35 +75,67 @@ class Ui_Dialog(object):
 "image: url(:/icone/Icons/arrow-left.svg);")
         self.btIndietro.setText("")
         self.btIndietro.setObjectName("btIndietro")
-
+        self.btIndietro.clicked.connect(self.btIndietroClicked)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.init_db()
+        self.load_data_tabella()
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Gestione della tabella dei nomi"))
-        item = self.tableWidget.horizontalHeaderItem(0)
+        item = self.tableNomi.horizontalHeaderItem(0)
         item.setText(_translate("Dialog", "ID"))
-        item = self.tableWidget.horizontalHeaderItem(1)
+        item = self.tableNomi.horizontalHeaderItem(1)
         item.setText(_translate("Dialog", "Nome"))
-        item = self.tableWidget.horizontalHeaderItem(2)
+        item = self.tableNomi.horizontalHeaderItem(2)
         item.setText(_translate("Dialog", "Vegano"))
-        item = self.tableWidget.horizontalHeaderItem(3)
+        item = self.tableNomi.horizontalHeaderItem(3)
         item.setText(_translate("Dialog", "Piccante"))
-        item = self.tableWidget.horizontalHeaderItem(4)
+        item = self.tableNomi.horizontalHeaderItem(4)
         item.setText(_translate("Dialog", "Intolleranze"))
         self.btInserisciNome.setText(_translate("Dialog", "Inserisci"))
         self.btModificaNome.setText(_translate("Dialog", "Modifica"))
         self.btEliminaNome.setText(_translate("Dialog", "Elimina"))
 
+    def init_db(self):
+        self.db = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="alessio",
+            database="mydbristorante"
+        )
+        self.model = QSqlQueryModel()
+        self.cursor = self.db.cursor()
+
+    def load_data_tabella(self):
+        cur=self.cursor
+        cur = self.cursor
+        query = """select *
+                from nomeelemento"""
+        cur.execute(query)
+        result = cur.fetchall()
+        self.tableNomi.setRowCount(0)
+        for row_number, row_data in enumerate(result):
+            print(row_number)
+            self.tableNomi.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                print(f"{data}, {column_number}")
+                self.tableNomi.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+        self.tableNomi.resizeColumnsToContents()
+
+    def btIndietroClicked(self):
+        self.parent.close()
+
+
 
 if __name__ == "__main__":
             import sys
             app = QtWidgets.QApplication(sys.argv)
-            formGestioneNomi = QtWidgets.QDialog()
-            ui = (Ui_Dialog())
-            ui.setupUi(formGestioneNomi)
-            formGestioneNomi.show()
+            formGestioneMagazzino = QtWidgets.QDialog()
+            ui = (Ui_Dialog(None))
+            ui.setupUi(formGestioneMagazzino)
+            formGestioneMagazzino.show()
             sys.exit(app.exec_())
 
 
