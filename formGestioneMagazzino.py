@@ -15,6 +15,7 @@ from PyQt5.QtSql import QSqlQueryModel
 from PyQt5.QtWidgets import QTableWidgetItem, QMainWindow, QPushButton, QMessageBox
 from gestioneNomi import Ui_Dialog
 import formAggiungiModificaElementoMagazzino
+from datetime import datetime, date
 
 class Ui_formMagazzino(object):
 
@@ -75,6 +76,7 @@ class Ui_formMagazzino(object):
         self.btModificaElemento.setFont(font)
         self.btModificaElemento.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btModificaElemento.setObjectName("btModificaElemento")
+        self.btModificaElemento.clicked.connect(self.btModificaClicked)
         self.btRimuoviElemento = QtWidgets.QPushButton(formMagazzino)
         self.btRimuoviElemento.setGeometry(QtCore.QRect(540, 150, 231, 41))
         font = QtGui.QFont()
@@ -159,6 +161,24 @@ class Ui_formMagazzino(object):
         self.uiInserisci.setupUi(self.formInserisci)
         self.uiInserisci.fCUelementoMagazzino.setWindowTitle("inserisci elemento magazzino")
         self.formInserisci.show()
+        self.fMagazzino.setEnabled(True)
+        self.load_data_tabella()
+
+    def btModificaClicked(self):
+        self.fMagazzino.setEnabled(False)
+        self.formModifica = QtWidgets.QDialog()
+        self.uiModifica = formAggiungiModificaElementoMagazzino.Ui_formCU_elementoMagazzino()
+        self.uiModifica.setupUi(self.formModifica)
+        self.uiModifica.fCUelementoMagazzino.setWindowTitle("Modifica elemento magazzino")
+        self.uiModifica.idToUpdate = int(self.tableMagazzino.item(self.tableMagazzino.currentRow(), 0).text())
+        dataStringa = self.tableMagazzino.item(self.tableMagazzino.currentRow(), 4).text()
+        dataScadenzaDate = datetime.strptime(dataStringa, '%Y-%m-%d').date()
+        self.uiModifica.dateEditScadenza.setDate(dataScadenzaDate)
+        self.uiModifica.numberQuantita.setValue(float(self.tableMagazzino.item(self.tableMagazzino.currentRow(), 3).text()))
+        PrezzoSenzaEuro = self.tableMagazzino.item(self.tableMagazzino.currentRow(), 2).text().replace("€","")
+        self.uiModifica.numberPrezzo.setValue(float(PrezzoSenzaEuro))
+        self.uiModifica.txtFornitore.setText(self.tableMagazzino.item(self.tableMagazzino.currentRow(), 5).text())
+        self.formModifica.show()
         self.fMagazzino.setEnabled(True)
         self.load_data_tabella()
 

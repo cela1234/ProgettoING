@@ -18,7 +18,7 @@ import Resources.icons
 
 class Ui_formCU_elementoMagazzino(object):
     def setupUi(self, formCU_elementoMagazzino):
-        self.isInserisci = True
+        self.idToUpdate = -1
         self.fCUelementoMagazzino = formCU_elementoMagazzino
         formCU_elementoMagazzino.setObjectName("formCU_elementoMagazzino")
         formCU_elementoMagazzino.resize(291, 568)
@@ -133,6 +133,9 @@ class Ui_formCU_elementoMagazzino(object):
         font.setPointSize(14)
         self.numberPrezzo.setFont(font)
         self.numberPrezzo.setStyleSheet(u"background-color: rgb(255, 255, 255);")
+        self.numberPrezzo.setMaximum(10000.00)
+        self.numberQuantita.setMaximum(10000.00)
+        self.btEsegui.clicked.connect(self.btEseguiClicked)
 
         self.init_db()
         self.load_data_list()
@@ -168,14 +171,42 @@ class Ui_formCU_elementoMagazzino(object):
                     self.listaIdNomi.append(str(data))
                 else:
                     self.listaNomi.addItem(str(data))
+        self.fCUelementoMagazzino.close()
+
 
     def btEseguiClicked(self):
-        cur = self.cursor
-        idNomeElemento = self.listaIdNomi[self.listaNomi.currentIndex()]
-        # Prezzo = self.txtPrezzo.text()
-        # Quantità = self.txtQuantita.text()
-        query = "Insert into elementomagazzino"
-
+        dlg = QMessageBox()
+        dlg.setWindowTitle("Conferma")
+        dlg.setText("Sei sicuro di voler proseguire?")
+        dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        dlg.setIcon(QMessageBox.Warning)
+        button = dlg.exec()
+        if button == QMessageBox.Yes:
+            if self.idToUpdate == -1:
+                cur = self.cursor
+                x = self.listaNomi.currentRow()
+                idNomeElemento = self.listaIdNomi[self.listaNomi.currentRow()]
+                Prezzo = self.numberPrezzo.text()
+                Quantita = self.numberQuantita.text()
+                DataDiScadenza = self.dateEditScadenza.date().toString('yyyy-MM-dd')
+                Fornitore = self.txtFornitore.text()
+                query = f"Insert into elementomagazzino(idNomeElemento, Prezzo, Quantita, Scadenza, Fornitore) values ({idNomeElemento}, {Prezzo}, {Quantita}, '{DataDiScadenza}', '{Fornitore}')"
+                cur.execute(query)
+                self.db.commit()
+                self.fCUelementoMagazzino.close()
+            else:
+                cur = self.cursor
+                x = self.listaNomi.currentRow()
+                idNomeElemento = self.listaIdNomi[self.listaNomi.currentRow()]
+                Prezzo = self.numberPrezzo.text()
+                Quantita = self.numberQuantita.text()
+                DataDiScadenza = self.dateEditScadenza.date().toString('yyyy-MM-dd')
+                Fornitore = self.txtFornitore.text()
+                query = f"UPDATE elementomagazzino SET idNomeElemento = {idNomeElemento}, Prezzo = {Prezzo}, Quantita = {Quantita}, Scadenza = '{DataDiScadenza}', Fornitore = '{Fornitore}' WHERE id = {self.idToUpdate}"
+                cur.execute(query)
+                self.db.commit()
+                self.fCUelementoMagazzino.close()
+        #TODO check per evitare di inserire valori nulli
 
     def retranslateUi(self, formCU_elementoMagazzino):
         _translate = QtCore.QCoreApplication.translate
