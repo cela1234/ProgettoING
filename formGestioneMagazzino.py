@@ -14,10 +14,12 @@ import mysql.connector
 from PyQt5.QtSql import QSqlQueryModel
 from PyQt5.QtWidgets import QTableWidgetItem, QMainWindow, QPushButton, QMessageBox
 from gestioneNomi import Ui_Dialog
+import formAggiungiModificaElementoMagazzino
 
 class Ui_formMagazzino(object):
 
     def setupUi(self, formMagazzino, parent):
+        self.fMagazzino = formMagazzino
         formMagazzino.setObjectName("Dialog")
         formMagazzino.resize(782, 660)
         formMagazzino.setStyleSheet("background-color: rgb(159, 197, 248);")
@@ -64,6 +66,7 @@ class Ui_formMagazzino(object):
         self.btInserisciElemento.setFont(font)
         self.btInserisciElemento.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btInserisciElemento.setObjectName("btInserisciElemento")
+        self.btInserisciElemento.clicked.connect(self.btInserisciClicked)
         self.btModificaElemento = QtWidgets.QPushButton(formMagazzino)
         self.btModificaElemento.setGeometry(QtCore.QRect(540, 100, 231, 41))
         font = QtGui.QFont()
@@ -149,7 +152,15 @@ class Ui_formMagazzino(object):
         window.show()
         self.db.close()
 
-
+    def btInserisciClicked(self):
+        self.fMagazzino.setEnabled(False)
+        self.formInserisci = QtWidgets.QDialog()
+        self.uiInserisci = formAggiungiModificaElementoMagazzino.Ui_formCU_elementoMagazzino()
+        self.uiInserisci.setupUi(self.formInserisci)
+        self.uiInserisci.fCUelementoMagazzino.setWindowTitle("inserisci elemento magazzino")
+        self.formInserisci.show()
+        self.fMagazzino.setEnabled(True)
+        self.load_data_tabella()
 
     def btRimuoviClicked(self):
         selectedRow = self.tableMagazzino.currentRow()
