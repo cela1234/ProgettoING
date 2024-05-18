@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QDoubleSpinBox
 import mysql
 import mysql.connector
 from PyQt5.QtSql import QSqlQueryModel
@@ -67,24 +67,24 @@ class Ui_formCU_elementoMagazzino(object):
         self.txtFornitore.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.txtFornitore.setText("")
         self.txtFornitore.setObjectName("txtFornitore")
-        self.txtQuantita = QtWidgets.QLineEdit(formCU_elementoMagazzino)
-        self.txtQuantita.setGeometry(QtCore.QRect(110, 390, 171, 31))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        font.setPointSize(14)
-        self.txtQuantita.setFont(font)
-        self.txtQuantita.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.txtQuantita.setText("")
-        self.txtQuantita.setObjectName("txtQuantita")
-        self.txtPrezzo = QtWidgets.QLineEdit(formCU_elementoMagazzino)
-        self.txtPrezzo.setGeometry(QtCore.QRect(110, 350, 171, 31))
-        font = QtGui.QFont()
-        font.setFamily("Georgia")
-        font.setPointSize(14)
-        self.txtPrezzo.setFont(font)
-        self.txtPrezzo.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.txtPrezzo.setText("")
-        self.txtPrezzo.setObjectName("txtPrezzo")
+        # self.txtQuantita = QtWidgets.QLineEdit(formCU_elementoMagazzino)
+        # self.txtQuantita.setGeometry(QtCore.QRect(110, 390, 171, 31))
+        # font = QtGui.QFont()
+        # font.setFamily("Georgia")
+        # font.setPointSize(14)
+        # self.txtQuantita.setFont(font)
+        # self.txtQuantita.setStyleSheet("background-color: rgb(255, 255, 255);")
+        # self.txtQuantita.setText("")
+        # self.txtQuantita.setObjectName("txtQuantita")
+        # self.txtPrezzo = QtWidgets.QLineEdit(formCU_elementoMagazzino)
+        # self.txtPrezzo.setGeometry(QtCore.QRect(110, 350, 171, 31))
+        # font = QtGui.QFont()
+        # font.setFamily("Georgia")
+        # font.setPointSize(14)
+        # self.txtPrezzo.setFont(font)
+        # self.txtPrezzo.setStyleSheet("background-color: rgb(255, 255, 255);")
+        # self.txtPrezzo.setText("")
+        # self.txtPrezzo.setObjectName("txtPrezzo")
         self.dateEditScadenza = QtWidgets.QDateEdit(formCU_elementoMagazzino)
         self.dateEditScadenza.setGeometry(QtCore.QRect(110, 431, 171, 31))
         font = QtGui.QFont()
@@ -117,6 +117,22 @@ class Ui_formCU_elementoMagazzino(object):
         self.btHelp.setText("")
         self.btHelp.setObjectName("btHelp")
         self.btHelp.clicked.connect(self.btHelpClicked)
+        self.numberQuantita = QDoubleSpinBox(formCU_elementoMagazzino)
+        self.numberQuantita.setObjectName(u"numberQuantita")
+        self.numberQuantita.setGeometry(QtCore.QRect(110, 390, 171, 31))
+        font = QtGui.QFont()
+        font.setFamily("Georgia")
+        font.setPointSize(14)
+        self.numberQuantita.setFont(font)
+        self.numberQuantita.setStyleSheet(u"background-color: rgb(255, 255, 255);")
+        self.numberPrezzo = QDoubleSpinBox(formCU_elementoMagazzino)
+        self.numberPrezzo.setObjectName(u"numberPrezzo")
+        self.numberPrezzo.setGeometry(QtCore.QRect(110, 350, 171, 31))
+        font = QtGui.QFont()
+        font.setFamily("Georgia")
+        font.setPointSize(14)
+        self.numberPrezzo.setFont(font)
+        self.numberPrezzo.setStyleSheet(u"background-color: rgb(255, 255, 255);")
 
         self.init_db()
         self.load_data_list()
@@ -156,8 +172,8 @@ class Ui_formCU_elementoMagazzino(object):
     def btEseguiClicked(self):
         cur = self.cursor
         idNomeElemento = self.listaIdNomi[self.listaNomi.currentIndex()]
-        Prezzo = self.txtPrezzo.text()
-        Quantità = self.txtQuantita.text()
+        # Prezzo = self.txtPrezzo.text()
+        # Quantità = self.txtQuantita.text()
         query = "Insert into elementomagazzino"
 
 
