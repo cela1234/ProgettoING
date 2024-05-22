@@ -22,7 +22,7 @@ class Ui_formMagazzino(object):
     def setupUi(self, formMagazzino, parent):
         self.fMagazzino = formMagazzino
         formMagazzino.setObjectName("Dialog")
-        formMagazzino.resize(782, 660)
+        formMagazzino.resize(782, 590)
         formMagazzino.setStyleSheet("background-color: rgb(159, 197, 248);")
         self.tableMagazzino = QtWidgets.QTableWidget(formMagazzino)
         self.tableMagazzino.setGeometry(QtCore.QRect(10, 10, 520, 571))
@@ -30,18 +30,18 @@ class Ui_formMagazzino(object):
         self.tableMagazzino.setObjectName("tableMagazzino")
         self.tableMagazzino.setRowCount(0)
         self.tableMagazzino.setColumnCount(9)
-        self.btIndietro = QtWidgets.QPushButton(formMagazzino)
-        self.btIndietro.clicked.connect(lambda: self.btIndietroClicked(parent))
-        self.btIndietro.setGeometry(QtCore.QRect(10, 600, 51, 51))
-        self.btIndietro.setStyleSheet("\n"
-                                      "image: url(:/icone/Icons/arrow-left.svg);")
-        self.btIndietro.setText("")
-        self.btIndietro.setObjectName("btIndietro")
-        self.line = QtWidgets.QFrame(formMagazzino)
-        self.line.setGeometry(QtCore.QRect(0, 580, 771, 16))
-        self.line.setFrameShape(QtWidgets.QFrame.HLine)
-        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line.setObjectName("line")
+        # self.btIndietro = QtWidgets.QPushButton(formMagazzino)
+        # self.btIndietro.clicked.connect(lambda: self.btIndietroClicked(parent))
+        # self.btIndietro.setGeometry(QtCore.QRect(10, 600, 51, 51))
+        # self.btIndietro.setStyleSheet("\n"
+        #                               "image: url(:/icone/Icons/arrow-left.svg);")
+        # self.btIndietro.setText("")
+        # self.btIndietro.setObjectName("btIndietro")
+        # self.line = QtWidgets.QFrame(formMagazzino)
+        # self.line.setGeometry(QtCore.QRect(0, 580, 771, 16))
+        # self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        # self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        # self.line.setObjectName("line")
         self.txtCerca = QtWidgets.QLineEdit(formMagazzino)
         self.txtCerca.setGeometry(QtCore.QRect(540, 10, 231, 31))
         font = QtGui.QFont()
@@ -122,11 +122,10 @@ class Ui_formMagazzino(object):
             password="alessio",
             database="mydbristorante"
         )
-        self.model = QSqlQueryModel()
-        self.cursor = self.db.cursor()
 
     def load_data_tabella(self):
-        cur = self.cursor
+        self.db.reconnect()
+        cur = self.db.cursor()
         query = """select elementomagazzino.id, nome, prezzo, quantita, scadenza, fornitore
         from elementomagazzino inner join nomeelemento
         on elementomagazzino.idNomeElemento = nomeelemento.id"""
@@ -150,9 +149,6 @@ class Ui_formMagazzino(object):
         self.uiMagazzino = Ui_Dialog()
         self.uiMagazzino.setupUi(self.formGestioneNomi, formGestioneMagazzino)
         self.formGestioneNomi.show()
-    def btIndietroClicked(self, window):
-        window.show()
-        self.db.close()
 
     def btInserisciClicked(self):
         self.fMagazzino.setEnabled(False)
@@ -160,7 +156,9 @@ class Ui_formMagazzino(object):
         self.uiInserisci = formAggiungiModificaElementoMagazzino.Ui_formCU_elementoMagazzino()
         self.uiInserisci.setupUi(self.formInserisci)
         self.uiInserisci.fCUelementoMagazzino.setWindowTitle("inserisci elemento magazzino")
-        self.formInserisci.show()
+        #self.formInserisci.show()
+        self.formInserisci.exec_()
+        self.tableMagazzino.clearContents()
         self.fMagazzino.setEnabled(True)
         self.load_data_tabella()
 
@@ -178,7 +176,7 @@ class Ui_formMagazzino(object):
         PrezzoSenzaEuro = self.tableMagazzino.item(self.tableMagazzino.currentRow(), 2).text().replace("€","")
         self.uiModifica.numberPrezzo.setValue(float(PrezzoSenzaEuro))
         self.uiModifica.txtFornitore.setText(self.tableMagazzino.item(self.tableMagazzino.currentRow(), 5).text())
-        self.formModifica.show()
+        self.formModifica.exec_()
         self.fMagazzino.setEnabled(True)
         self.load_data_tabella()
 
@@ -195,7 +193,7 @@ class Ui_formMagazzino(object):
             dlg = QMessageBox()
             dlg.setWindowTitle("Eliminazione elemento magazzino")
             dlg.setText(f"Sicuro di voler eliminare l'elemento del magazzino con nome: {self.tableMagazzino.item(selectedRow, 1).text()} del fornitore {self.tableMagazzino.item(selectedRow, 5).text()}")
-            cur = self.cursor
+            cur = self.db.cursor()
             dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             dlg.setIcon(QMessageBox.Warning)
             button = dlg.exec()

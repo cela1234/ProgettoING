@@ -25,7 +25,7 @@ class Ui_Dialog(object):
         Dialog.resize(520, 540)
         Dialog.setStyleSheet("background-color: rgb(159, 197, 248);")
         self.tableNomi = QtWidgets.QTableWidget(Dialog)
-        self.tableNomi.setGeometry(QtCore.QRect(10, 10, 501, 381))
+        self.tableNomi.setGeometry(QtCore.QRect(10, 10, 501, 361))
         self.tableNomi.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableNomi.setObjectName("tableNomi")
         self.tableNomi.setColumnCount(5)
@@ -41,7 +41,7 @@ class Ui_Dialog(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableNomi.setHorizontalHeaderItem(4, item)
         self.btInserisciNome = QtWidgets.QPushButton(Dialog)
-        self.btInserisciNome.setGeometry(QtCore.QRect(10, 400, 161, 51))
+        self.btInserisciNome.setGeometry(QtCore.QRect(10, 380, 161, 51))
         font = QtGui.QFont()
         font.setFamily("Georgia")
         font.setPointSize(16)
@@ -49,7 +49,7 @@ class Ui_Dialog(object):
         self.btInserisciNome.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btInserisciNome.setObjectName("btInserisciNome")
         self.btModificaNome = QtWidgets.QPushButton(Dialog)
-        self.btModificaNome.setGeometry(QtCore.QRect(180, 400, 161, 51))
+        self.btModificaNome.setGeometry(QtCore.QRect(180, 380, 161, 51))
         font = QtGui.QFont()
         font.setFamily("Georgia")
         font.setPointSize(16)
@@ -57,25 +57,25 @@ class Ui_Dialog(object):
         self.btModificaNome.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btModificaNome.setObjectName("btModificaNome")
         self.btEliminaNome = QtWidgets.QPushButton(Dialog)
-        self.btEliminaNome.setGeometry(QtCore.QRect(350, 400, 161, 51))
+        self.btEliminaNome.setGeometry(QtCore.QRect(350, 380, 161, 51))
         font = QtGui.QFont()
         font.setFamily("Georgia")
         font.setPointSize(16)
         self.btEliminaNome.setFont(font)
         self.btEliminaNome.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btEliminaNome.setObjectName("btEliminaNome")
-        self.line = QtWidgets.QFrame(Dialog)
-        self.line.setGeometry(QtCore.QRect(0, 460, 521, 16))
-        self.line.setFrameShape(QtWidgets.QFrame.HLine)
-        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.btIndietro = QtWidgets.QPushButton(Dialog)
-        self.btIndietro.setGeometry(QtCore.QRect(10, 480, 51, 51))
-        self.btIndietro.setStyleSheet("\n"
-"image: url(:/icone/Icons/arrow-left.svg);")
-        self.btIndietro.setText("")
-        self.btIndietro.setObjectName("btIndietro")
-        self.btIndietro.clicked.connect(self.btIndietroClicked)
+        # self.line = QtWidgets.QFrame(Dialog)
+        # self.line.setGeometry(QtCore.QRect(0, 460, 521, 16))
+        # self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        # self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        # self.line.setObjectName("line")
+#         self.btIndietro = QtWidgets.QPushButton(Dialog)
+#         self.btIndietro.setGeometry(QtCore.QRect(10, 480, 51, 51))
+#         self.btIndietro.setStyleSheet("\n"
+# "image: url(:/icone/Icons/arrow-left.svg);")
+#         self.btIndietro.setText("")
+#         self.btIndietro.setObjectName("btIndietro")
+#         self.btIndietro.clicked.connect(self.btIndietroClicked)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
         self.init_db()
@@ -105,12 +105,11 @@ class Ui_Dialog(object):
             password="alessio",
             database="mydbristorante"
         )
-        self.model = QSqlQueryModel()
-        self.cursor = self.db.cursor()
+
 
     def load_data_tabella(self):
-        cur=self.cursor
-        cur = self.cursor
+        self.db.reconnect()
+        cur = self.db.cursor()
         query = """select *
                 from nomeelemento"""
         cur.execute(query)
@@ -133,7 +132,7 @@ if __name__ == "__main__":
             import sys
             app = QtWidgets.QApplication(sys.argv)
             formGestioneMagazzino = QtWidgets.QDialog()
-            ui = (Ui_Dialog(None))
+            ui = (Ui_Dialog())
             ui.setupUi(formGestioneMagazzino)
             formGestioneMagazzino.show()
             sys.exit(app.exec_())
