@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QMessageBox, QDoubleSpinBox
 import mysql
 import mysql.connector
 from PyQt5.QtSql import QSqlQueryModel
+import classi.GestoriDB.GestoreElementiMagazzino as GestoreDBMagazzino
 
 import Resources.icons
 
@@ -154,16 +155,15 @@ class Ui_formCU_elementoMagazzino(object):
             host="localhost",
             user="root",
             password="alessio",
-            database="mydbristorante"
+            database="mydbristorante",
+            port = 3360
         )
         self.model = QSqlQueryModel()
         self.cursor = self.db.cursor()
 
     def load_data_list(self):
-        cur = self.cursor
-        query = "SELECT id, nome FROM nomeelemento"
-        cur.execute(query)
-        result = cur.fetchall()
+
+        result = GestoreDBMagazzino.ottieniNomiElementi()
         self.listaIdNomi = []
         for row_number, row_data in enumerate(result):
             for column_number, data in enumerate(row_data):
@@ -183,7 +183,6 @@ class Ui_formCU_elementoMagazzino(object):
         button = dlg.exec()
         if button == QMessageBox.Yes:
             if self.idToUpdate == -1:
-                cur = self.cursor
                 x = self.listaNomi.currentRow()
                 idNomeElemento = self.listaIdNomi[self.listaNomi.currentRow()]
                 Prezzo = self.numberPrezzo.text()
@@ -191,11 +190,9 @@ class Ui_formCU_elementoMagazzino(object):
                 DataDiScadenza = self.dateEditScadenza.date().toString('yyyy-MM-dd')
                 Fornitore = self.txtFornitore.text()
                 query = f"Insert into elementomagazzino(idNomeElemento, Prezzo, Quantita, Scadenza, Fornitore) values ({idNomeElemento}, {Prezzo}, {Quantita}, '{DataDiScadenza}', '{Fornitore}')"
-                cur.execute(query)
-                self.db.commit()
+                GestoreDBMagazzino.eseguiQuery(query)
                 self.fCUelementoMagazzino.close()
             else:
-                cur = self.cursor
                 x = self.listaNomi.currentRow()
                 idNomeElemento = self.listaIdNomi[self.listaNomi.currentRow()]
                 Prezzo = self.numberPrezzo.text()
@@ -203,8 +200,7 @@ class Ui_formCU_elementoMagazzino(object):
                 DataDiScadenza = self.dateEditScadenza.date().toString('yyyy-MM-dd')
                 Fornitore = self.txtFornitore.text()
                 query = f"UPDATE elementomagazzino SET idNomeElemento = {idNomeElemento}, Prezzo = {Prezzo}, Quantita = {Quantita}, Scadenza = '{DataDiScadenza}', Fornitore = '{Fornitore}' WHERE id = {self.idToUpdate}"
-                cur.execute(query)
-                self.db.commit()
+                GestoreDBMagazzino.eseguiQuery(query)
                 self.fCUelementoMagazzino.close()
         #TODO check per evitare di inserire valori nulli
 

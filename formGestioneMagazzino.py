@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import QTableWidgetItem, QMainWindow, QPushButton, QMessage
 from gestioneNomi import Ui_Dialog
 import formAggiungiModificaElementoMagazzino
 from datetime import datetime, date
+import classi.GestoriDB.GestoreElementiMagazzino as GestoreDBMagazzino
 
 class Ui_formMagazzino(object):
 
@@ -120,17 +121,12 @@ class Ui_formMagazzino(object):
             host="localhost",
             user="root",
             password="alessio",
-            database="mydbristorante"
+            database="mydbristorante",
+            port=3360 #QUESTO PER ME (cela), se vi da problemi toglietelo, io ho il db in una porta diversa
         )
 
     def load_data_tabella(self):
-        self.db.reconnect()
-        cur = self.db.cursor()
-        query = """select elementomagazzino.id, nome, prezzo, quantita, scadenza, fornitore
-        from elementomagazzino inner join nomeelemento
-        on elementomagazzino.idNomeElemento = nomeelemento.id"""
-        cur.execute(query)
-        result = cur.fetchall()
+        result = GestoreDBMagazzino.ottieniElementiTabellaMagazzino()
         self.tableMagazzino.setRowCount(0)
         for row_number, row_data in enumerate(result):
             print(row_number)

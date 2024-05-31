@@ -103,7 +103,8 @@ class Ui_Dialog(object):
             host="localhost",
             user="root",
             password="alessio",
-            database="mydbristorante"
+            database="mydbristorante",
+            port = 3360
         )
 
 
