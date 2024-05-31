@@ -344,7 +344,7 @@ class Ui_formAmministratore(object):
         self.btMagazzino.setText(_translate("formAmministratore", "Gestione del magazzino"))
         self.btOrdinazioni.setText(_translate("formAmministratore", "Gestione delle ordinazioni"))
         self.btUtenti.setText(_translate("formAmministratore", "Gestione degli utenti"))
-        self.btDipendenti.setText(_translate("formAmministratore", "Gestione dei dipendenti"))
+        self.btDipendenti.setText(_translate("formAmministratore", "Gestione dei \ndipendenti - turni"))
         self.btMenu.setText(_translate("formAmministratore", "Gestione del Menu"))
         self.btPrenotazioni.setText(_translate("formAmministratore", "Gestione delle prenotazioni"))
         self.btFatture.setText(_translate("formAmministratore", "Gestione delle fatture"))
