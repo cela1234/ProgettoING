@@ -138,7 +138,6 @@ class Ui_formCU_elementoMagazzino(object):
         self.numberQuantita.setMaximum(10000.00)
         self.btEsegui.clicked.connect(self.btEseguiClicked)
 
-        self.init_db()
         self.load_data_list()
         self.retranslateUi(formCU_elementoMagazzino)
         QtCore.QMetaObject.connectSlotsByName(formCU_elementoMagazzino)
@@ -150,20 +149,10 @@ class Ui_formCU_elementoMagazzino(object):
         dlg.setStandardButtons(QMessageBox.Ok)
         dlg.setIcon(QMessageBox.Information)
         dlg.exec()
-    def init_db(self):
-        self.db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="alessio",
-            database="mydbristorante",
-            port = 3360
-        )
-        self.model = QSqlQueryModel()
-        self.cursor = self.db.cursor()
+
 
     def load_data_list(self):
-
-        result = GestoreDBMagazzino.ottieniNomiElementi()
+        result = GestoreDBMagazzino.ottieniNomiElementiCUelementoMagazzino()
         self.listaIdNomi = []
         for row_number, row_data in enumerate(result):
             for column_number, data in enumerate(row_data):

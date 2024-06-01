@@ -9,10 +9,15 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
+
+import classi.GestoriDB.GestoreElementiMagazzino as GestoreDBMagazzino
 
 
 class Ui_formCU_nomeElemento(object):
     def setupUi(self, formCU_nomeElemento):
+        self.idToUpdate = -1
+        self.fCU_nomeElemento = formCU_nomeElemento
         formCU_nomeElemento.setObjectName("formCU_nomeElemento")
         formCU_nomeElemento.resize(320, 268)
         formCU_nomeElemento.setStyleSheet("background-color: rgb(159, 197, 248);")
@@ -73,20 +78,48 @@ class Ui_formCU_nomeElemento(object):
         self.checkBoxPiccante.setGeometry(QtCore.QRect(140, 142, 16, 21))
         self.checkBoxPiccante.setText("")
         self.checkBoxPiccante.setObjectName("checkBoxPiccante")
-        self.checkBoxVegabo = QtWidgets.QCheckBox(formCU_nomeElemento)
-        self.checkBoxVegabo.setGeometry(QtCore.QRect(140, 177, 20, 20))
-        self.checkBoxVegabo.setText("")
-        self.checkBoxVegabo.setObjectName("checkBoxVegabo")
-
+        self.checkBoxVegano = QtWidgets.QCheckBox(formCU_nomeElemento)
+        self.checkBoxVegano.setGeometry(QtCore.QRect(140, 177, 20, 20))
+        self.checkBoxVegano.setText("")
+        self.checkBoxVegano.setObjectName("checkBoxVegano")
+        self.btEsegui.clicked.connect(self.btEseguiClicked)
         self.retranslateUi(formCU_nomeElemento)
         QtCore.QMetaObject.connectSlotsByName(formCU_nomeElemento)
 
     def retranslateUi(self, formCU_nomeElemento):
         _translate = QtCore.QCoreApplication.translate
-        formCU_nomeElemento.setWindowTitle(_translate("formCU_nomeElemento", "Dialog"))
+        if self.idToUpdate == -1:
+            formCU_nomeElemento.setWindowTitle(_translate("formCU_nomeElemento", "Inserisci nomeElemento"))
+        else:
+            formCU_nomeElemento.setWindowTitle(_translate("formCU_nomeElemento", "Modifica nomeElemento"))
         self.label.setText(_translate("formCU_nomeElemento", "Nome:"))
         self.label_2.setText(_translate("formCU_nomeElemento", "Intolleranze:"))
         self.label_4.setText(_translate("formCU_nomeElemento", "Piccante:"))
         self.label_5.setText(_translate("formCU_nomeElemento", "Vegano:"))
         self.btEsegui.setText(_translate("formCU_nomeElemento", "Esegui operazione"))
-import icons_rc
+
+    def btEseguiClicked(self):
+        dlg = QMessageBox()
+        dlg.setWindowTitle("Conferma")
+        dlg.setText("Sei sicuro di voler proseguire?")
+        dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        dlg.setIcon(QMessageBox.Warning)
+        button = dlg.exec()
+        if button == QMessageBox.Yes:
+            if self.idToUpdate == -1:
+                nome = self.txtNome.text()
+                piccante = self.checkBoxPiccante.isChecked()
+                vegano = self.checkBoxVegano.isChecked()
+                intolleranze = self.txtIntolleranze.text()
+                query = f"insert into nomeElemento(nome, piccante, vegano, intolleranze) VALUES ('{nome}', {piccante}, {vegano}, '{intolleranze}')"
+                GestoreDBMagazzino.eseguiQuery()
+                self.fCU_nomeElemento.close()
+            else:
+                nome = self.txtNome.text()
+                piccante = self.checkBoxPiccante.isChecked()
+                vegano = self.checkBoxVegano.isChecked()
+                intolleranze = self.txtIntolleranze.text()
+                query = f"UPDATE nomeElemento SET nome = '{nome}', piccante = {piccante}, vegano = {vegano}, intolleranze = '{intolleranze}' WHERE id = {self.idToUpdate}"
+                GestoreDBMagazzino.eseguiQuery()
+                self.fCU_nomeElemento.close()
+        # TODO check per evitare di inserire valori nulli

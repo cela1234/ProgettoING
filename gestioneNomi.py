@@ -14,15 +14,17 @@ import mysql.connector
 from PyQt5.QtSql import QSqlQueryModel
 from PyQt5.QtWidgets import QTableWidgetItem, QMainWindow, QPushButton, QMessageBox
 import Resources.icons
-
+import classi.GestoriDB.GestoreElementiMagazzino as GestoreDBMagazzino
+import formAggiungiModificaNomeElemento
 
 class Ui_Dialog(object):
     def chiudiMain(self):
         pass
 
-    def setupUi(self, Dialog, Parent):
+    def setupUi(self, Dialog):
+        self.fGestioneNomi = Dialog
         Dialog.setObjectName("Dialog")
-        Dialog.resize(520, 540)
+        Dialog.resize(520, 450)
         Dialog.setStyleSheet("background-color: rgb(159, 197, 248);")
         self.tableNomi = QtWidgets.QTableWidget(Dialog)
         self.tableNomi.setGeometry(QtCore.QRect(10, 10, 501, 361))
@@ -76,9 +78,12 @@ class Ui_Dialog(object):
 #         self.btIndietro.setText("")
 #         self.btIndietro.setObjectName("btIndietro")
 #         self.btIndietro.clicked.connect(self.btIndietroClicked)
+        self.btInserisciNome.clicked.connect(self.btInserisciNomeClicked)
+        self.btModificaNome.clicked.connect(self.btModificaNomeClicked)
+        self.btEliminaNome.clicked.connect(self.btEliminaNomeClicked)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
-        self.init_db()
+
         self.load_data_tabella()
 
     def retranslateUi(self, Dialog):
@@ -98,34 +103,71 @@ class Ui_Dialog(object):
         self.btModificaNome.setText(_translate("Dialog", "Modifica"))
         self.btEliminaNome.setText(_translate("Dialog", "Elimina"))
 
-    def init_db(self):
-        self.db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="alessio",
-            database="mydbristorante",
-            port = 3360
-        )
 
+    def btInserisciNomeClicked(self):
+        pass
+    def btModificaNomeClicked(self):
+        # self.fMagazzino.setEnabled(False)
+        # self.formModifica = QtWidgets.QDialog()
+        # self.uiModifica = formAggiungiModificaElementoMagazzino.Ui_formCU_elementoMagazzino()
+        # self.uiModifica.setupUi(self.formModifica)
+        # self.uiModifica.fCUelementoMagazzino.setWindowTitle("Modifica elemento magazzino")
+        # self.uiModifica.idToUpdate = int(self.tableMagazzino.item(self.tableMagazzino.currentRow(), 0).text())
+        # dataStringa = self.tableMagazzino.item(self.tableMagazzino.currentRow(), 4).text()
+        # dataScadenzaDate = datetime.strptime(dataStringa, '%Y-%m-%d').date()
+        # self.uiModifica.dateEditScadenza.setDate(dataScadenzaDate)
+        # self.uiModifica.numberQuantita.setValue(
+        #     float(self.tableMagazzino.item(self.tableMagazzino.currentRow(), 3).text()))
+        # PrezzoSenzaEuro = self.tableMagazzino.item(self.tableMagazzino.currentRow(), 2).text().replace("€", "")
+        # self.uiModifica.numberPrezzo.setValue(float(PrezzoSenzaEuro))
+        # self.uiModifica.txtFornitore.setText(self.tableMagazzino.item(self.tableMagazzino.currentRow(), 5).text())
+        # self.formModifica.exec_()
+        # self.fMagazzino.setEnabled(True)
+        # self.load_data_tabella()
+        self.fGestioneNomi.setEnabled(False)
+        self.formModifica = QtWidgets.QDialog()
+        self.uiModifica = formAggiungiModificaNomeElemento.Ui_formCU_nomeElemento()
+        self.uiModifica.setupUi(self.formModifica)
+        self.uiModifica.idToUpdate = int(self.tableNomi.item(self.tableNomi.currentRow(), 0 ).text())
+        if str(self.tableNomi.item(self.tableNomi.currentRow(), 2).text()) == "Si":
+            self.uiModifica.checkBoxVegano.setChecked(True)
+        else:
+            self.uiModifica.checkBoxVegano.setChecked(False)
+        if str(self.tableNomi.item(self.tableNomi.currentRow(), 3).text()) == "Si":
+            self.uiModifica.checkBoxVegano.setChecked(True)
+        else:
+            self.uiModifica.checkBoxVegano.setChecked(False)
+        self.uiModifica.txtNome = str(self.tableNomi.item(self.tableNomi.currentRow(), 1 ).text())
+        self.uiModifica.txtIntolleranze = str(self.tableNomi.item(self.tableNomi.currentRow(), 4).text()) #da modificare qui, di sicuro dopo txtIntolleranze ci va qualcosa per cambiare testo
+        pass
+
+    def btEliminaNomeClicked(self):
+        pass
 
     def load_data_tabella(self):
-        self.db.reconnect()
-        cur = self.db.cursor()
-        query = """select *
-                from nomeelemento"""
-        cur.execute(query)
-        result = cur.fetchall()
+        result = GestoreDBMagazzino.ottieniNomiElementiGestioneNomi()
+        # self.db.reconnect()
+        # cur = self.db.cursor()
+        # query = """select *
+        #         from nomeelemento"""
+        # cur.execute(query)
+        # result = cur.fetchall()
         self.tableNomi.setRowCount(0)
         for row_number, row_data in enumerate(result):
             print(row_number)
             self.tableNomi.insertRow(row_number)
             for column_number, data in enumerate(row_data):
                 print(f"{data}, {column_number}")
-                self.tableNomi.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+                if column_number == 2 or column_number == 3:
+                    if data == 0:
+                        self.tableNomi.setItem(row_number, column_number, QTableWidgetItem("No"))
+                    elif data == 1:
+                        self.tableNomi.setItem(row_number, column_number, QTableWidgetItem("Si"))
+                else:
+                    self.tableNomi.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+
         self.tableNomi.resizeColumnsToContents()
 
-    def btIndietroClicked(self):
-        self.parent.close()
 
 
 
