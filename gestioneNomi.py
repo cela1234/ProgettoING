@@ -105,7 +105,13 @@ class Ui_Dialog(object):
 
 
     def btInserisciNomeClicked(self):
-        pass
+        self.fGestioneNomi.setEnabled(False)
+        self.formInserisci = QtWidgets.QDialog()
+        self.uiModifica = formAggiungiModificaNomeElemento.Ui_formCU_nomeElemento()
+        self.uiModifica.setupUi(self.formModifica)
+        self.formInserisci.exec_()
+        self.fGestioneNomi.setEnabled(True)
+        self.load_data_tabella()
     def btModificaNomeClicked(self):
         # self.fMagazzino.setEnabled(False)
         # self.formModifica = QtWidgets.QDialog()
@@ -137,12 +143,33 @@ class Ui_Dialog(object):
             self.uiModifica.checkBoxVegano.setChecked(True)
         else:
             self.uiModifica.checkBoxVegano.setChecked(False)
-        self.uiModifica.txtNome = str(self.tableNomi.item(self.tableNomi.currentRow(), 1 ).text())
-        self.uiModifica.txtIntolleranze = str(self.tableNomi.item(self.tableNomi.currentRow(), 4).text()) #da modificare qui, di sicuro dopo txtIntolleranze ci va qualcosa per cambiare testo
-        pass
+        self.uiModifica.txtNome.setText(self.tableNomi.item(self.tableNomi.currentRow(), 1 ).text())
+        self.uiModifica.txtIntolleranze.setText(self.tableNomi.item(self.tableNomi.currentRow(), 4 ).text()) #da modificare qui, di sicuro dopo txtIntolleranze ci va qualcosa per cambiare testo
+        self.formModifica.exec_()
+        self.fGestioneNomi.setEnabled(True)
+        self.load_data_tabella()
 
     def btEliminaNomeClicked(self):
-        pass
+        selectedRow = self.tableNomi.currentRow()
+        if selectedRow == -1:
+            dlg = QMessageBox()
+            dlg.setWindowTitle("Errore")
+            dlg.setText("Non hai selezionato nessun elemento!")
+            dlg.setStandardButtons(QMessageBox.Ok)
+            dlg.setIcon(QMessageBox.Critical)
+            dlg.exec()
+        else:
+            dlg = QMessageBox()
+            dlg.setWindowTitle("Eliminazione elemento magazzino")
+            dlg.setText(
+                f"Sicuro di voler eliminare il nomeElemento con nome: {self.tableNomi.item(selectedRow, 2).text()}>")
+            dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            dlg.setIcon(QMessageBox.Warning)
+            button = dlg.exec()
+            if button == QMessageBox.Yes:
+                query = f"DELETE FROM nomeelemento WHERE id = {self.tableNomi.item(selectedRow, 0).text()}"
+                GestoreDBMagazzino.eseguiQuery()
+            self.load_data_tabella()
 
     def load_data_tabella(self):
         result = GestoreDBMagazzino.ottieniNomiElementiGestioneNomi()
