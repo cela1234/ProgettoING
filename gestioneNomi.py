@@ -108,7 +108,7 @@ class Ui_Dialog(object):
         self.fGestioneNomi.setEnabled(False)
         self.formInserisci = QtWidgets.QDialog()
         self.uiModifica = formAggiungiModificaNomeElemento.Ui_formCU_nomeElemento()
-        self.uiModifica.setupUi(self.formModifica)
+        self.uiModifica.setupUi(self.formInserisci)
         self.formInserisci.exec_()
         self.fGestioneNomi.setEnabled(True)
         self.load_data_tabella()
@@ -130,24 +130,34 @@ class Ui_Dialog(object):
         # self.formModifica.exec_()
         # self.fMagazzino.setEnabled(True)
         # self.load_data_tabella()
-        self.fGestioneNomi.setEnabled(False)
-        self.formModifica = QtWidgets.QDialog()
-        self.uiModifica = formAggiungiModificaNomeElemento.Ui_formCU_nomeElemento()
-        self.uiModifica.setupUi(self.formModifica)
-        self.uiModifica.idToUpdate = int(self.tableNomi.item(self.tableNomi.currentRow(), 0 ).text())
-        if str(self.tableNomi.item(self.tableNomi.currentRow(), 2).text()) == "Si":
-            self.uiModifica.checkBoxVegano.setChecked(True)
+        selectedRow = self.tableNomi.currentRow()
+        if selectedRow == -1:
+            dlg = QMessageBox()
+            dlg.setWindowTitle("Errore")
+            dlg.setText("Non hai selezionato nessun elemento!")
+            dlg.setStandardButtons(QMessageBox.Ok)
+            dlg.setIcon(QMessageBox.Critical)
+            dlg.exec()
         else:
-            self.uiModifica.checkBoxVegano.setChecked(False)
-        if str(self.tableNomi.item(self.tableNomi.currentRow(), 3).text()) == "Si":
-            self.uiModifica.checkBoxVegano.setChecked(True)
-        else:
-            self.uiModifica.checkBoxVegano.setChecked(False)
-        self.uiModifica.txtNome.setText(self.tableNomi.item(self.tableNomi.currentRow(), 1 ).text())
-        self.uiModifica.txtIntolleranze.setText(self.tableNomi.item(self.tableNomi.currentRow(), 4 ).text()) #da modificare qui, di sicuro dopo txtIntolleranze ci va qualcosa per cambiare testo
-        self.formModifica.exec_()
-        self.fGestioneNomi.setEnabled(True)
-        self.load_data_tabella()
+            self.fGestioneNomi.setEnabled(False)
+            self.formModifica = QtWidgets.QDialog()
+            self.uiModifica = formAggiungiModificaNomeElemento.Ui_formCU_nomeElemento()
+            self.uiModifica.setupUi(self.formModifica)
+            self.uiModifica.idToUpdate = int(self.tableNomi.item(self.tableNomi.currentRow(), 0 ).text())
+            print(str(self.tableNomi.item(self.tableNomi.currentRow(), 2).text()))
+            if str(self.tableNomi.item(self.tableNomi.currentRow(), 2).text()) == "Si":
+                self.uiModifica.checkBoxVegano.setChecked(True)
+            else:
+                self.uiModifica.checkBoxVegano.setChecked(False)
+            if str(self.tableNomi.item(self.tableNomi.currentRow(), 3).text()) == "Si":
+                self.uiModifica.checkBoxPiccante.setChecked(True)
+            else:
+                self.uiModifica.checkBoxPiccante.setChecked(False)
+            self.uiModifica.txtNome.setText(self.tableNomi.item(self.tableNomi.currentRow(), 1 ).text())
+            self.uiModifica.txtIntolleranze.setText(self.tableNomi.item(self.tableNomi.currentRow(), 4 ).text()) #da modificare qui, di sicuro dopo txtIntolleranze ci va qualcosa per cambiare testo
+            self.formModifica.exec_()
+            self.fGestioneNomi.setEnabled(True)
+            self.load_data_tabella()
 
     def btEliminaNomeClicked(self):
         selectedRow = self.tableNomi.currentRow()

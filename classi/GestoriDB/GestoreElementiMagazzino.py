@@ -38,11 +38,11 @@ def eseguiQuery(query): #eseguiQuery è per le query che fanno modifiche al data
         )
         cursor = myconn.cursor()
         cursor.execute(query)
-        elementiMagazzino = cursor.fetchall()
-        return elementiMagazzino
+        myconn.commit()
+        return "corretto"
     except mysql.connector.Error as err:
         print(f"Errore durante l'ottenimento delle informazioni: {err}")
-        return[]
+        return err
     finally:
         myconn.close()
 
@@ -70,7 +70,7 @@ def ottieniNomiElementiCUelementoMagazzino():  #metodo ridondante ma lo faccio p
     return result
 
 def ottieniNomiElementiGestioneNomi():
-    query = "SELECT * from nomeelemento"
+    query = "SELECT id, nome, vegano, piccante, intolleranze from nomeelemento"
     result = eseguiQuerySELECT(query)
     return result
 

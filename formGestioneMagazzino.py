@@ -13,7 +13,7 @@ import mysql
 import mysql.connector
 from PyQt5.QtSql import QSqlQueryModel
 from PyQt5.QtWidgets import QTableWidgetItem, QMainWindow, QPushButton, QMessageBox
-from gestioneNomi import Ui_Dialog
+import gestioneNomi
 import formAggiungiModificaElementoMagazzino
 from datetime import datetime, date
 import classi.GestoriDB.GestoreElementiMagazzino as GestoreDBMagazzino
@@ -142,8 +142,8 @@ class Ui_formMagazzino(object):
     def btTabellaNomiClicked(self):
         # apre la seconda finestra
         self.formGestioneNomi = QtWidgets.QDialog()
-        self.uiMagazzino = Ui_Dialog()
-        self.uiMagazzino.setupUi(self.formGestioneNomi, formGestioneMagazzino)
+        self.uiMagazzino = gestioneNomi.Ui_Dialog()
+        self.uiMagazzino.setupUi(self.formGestioneNomi)
         self.formGestioneNomi.show()
 
     def btInserisciClicked(self):
