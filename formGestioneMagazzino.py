@@ -98,7 +98,10 @@ class Ui_formMagazzino(object):
         self.btVisualizzaTabellaNomi.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btVisualizzaTabellaNomi.setObjectName("btVisualizzaTabellaNomi")
         self.btVisualizzaTabellaNomi.clicked.connect(self.btTabellaNomiClicked)
+        self.tableMagazzino.setSortingEnabled(True)
+        self.txtCerca.textChanged.connect(self.filtraTabella)
         QtCore.QMetaObject.connectSlotsByName(formMagazzino)
+
         self.retranslateUi(formMagazzino)
         self.init_db()
         self.load_data_tabella()
@@ -126,6 +129,7 @@ class Ui_formMagazzino(object):
         )
 
     def load_data_tabella(self):
+        self.txtCerca.setText("")
         result = GestoreDBMagazzino.ottieniElementiTabellaMagazzino()
         self.tableMagazzino.setRowCount(0)
         for row_number, row_data in enumerate(result):
@@ -145,6 +149,17 @@ class Ui_formMagazzino(object):
         self.uiMagazzino = gestioneNomi.Ui_Dialog()
         self.uiMagazzino.setupUi(self.formGestioneNomi)
         self.formGestioneNomi.show()
+
+    def filtraTabella(self):
+        ricerca = self.txtCerca.text().lower()
+        for row in range(self.tableMagazzino.rowCount()):
+            item = self.tableMagazzino.item(row, 1)  # Colonna "Nome"
+            if item:
+                # Confronta il testo dell'elemento con il testo di ricerca
+                if ricerca in item.text().lower():
+                    self.tableMagazzino.setRowHidden(row, False)
+                else:
+                    self.tableMagazzino.setRowHidden(row, True)
 
     def btInserisciClicked(self):
         self.fMagazzino.setEnabled(False)
@@ -175,6 +190,9 @@ class Ui_formMagazzino(object):
         self.formModifica.exec_()
         self.fMagazzino.setEnabled(True)
         self.load_data_tabella()
+
+    def columnClicked(self):
+        self.tableMagazzino.setSortingEnabled()
 
     def btRimuoviClicked(self):
         selectedRow = self.tableMagazzino.currentRow()
