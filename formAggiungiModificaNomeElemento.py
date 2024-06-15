@@ -99,27 +99,34 @@ class Ui_formCU_nomeElemento(object):
         self.btEsegui.setText(_translate("formCU_nomeElemento", "Esegui operazione"))
 
     def btEseguiClicked(self):
+        nome = self.txtNome.text().strip()
+        if not nome:
+            self.showErrorMessage("Il campo 'Nome' non può essere vuoto.")
+            return
         dlg = QMessageBox()
         dlg.setWindowTitle("Conferma")
         dlg.setText("Sei sicuro di voler proseguire?")
         dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         dlg.setIcon(QMessageBox.Warning)
         button = dlg.exec()
+
         if button == QMessageBox.Yes:
+            piccante = self.checkBoxPiccante.isChecked()
+            vegano = self.checkBoxVegano.isChecked()
+            intolleranze = self.txtIntolleranze.toPlainText().strip()
             if self.idToUpdate == -1:
-                nome = self.txtNome.text()
-                piccante = self.checkBoxPiccante.isChecked()
-                vegano = self.checkBoxVegano.isChecked()
-                intolleranze = self.txtIntolleranze.toPlainText()
                 query = f"insert into nomeElemento(nome, piccante, vegano, intolleranze) VALUES ('{nome}', {piccante}, {vegano}, '{intolleranze}')"
                 GestoreDBMagazzino.eseguiQuery(query)
                 self.fCU_nomeElemento.close()
             else:
-                nome = self.txtNome.text()
-                piccante = self.checkBoxPiccante.isChecked()
-                vegano = self.checkBoxVegano.isChecked()
-                intolleranze = self.txtIntolleranze.toPlainText()
                 query = f"UPDATE nomeElemento SET nome = '{nome}', piccante = {piccante}, vegano = {vegano}, intolleranze = '{intolleranze}' WHERE id = {self.idToUpdate}"
                 GestoreDBMagazzino.eseguiQuery(query)
                 self.fCU_nomeElemento.close()
         # TODO check per evitare di inserire valori nulli
+
+    def showErrorMessage(self, message):
+        dlg = QMessageBox()
+        dlg.setWindowTitle("Errore")
+        dlg.setText(message)
+        dlg.setIcon(QMessageBox.Critical)
+        dlg.exec()

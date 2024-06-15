@@ -44,7 +44,7 @@ class Ui_formMagazzino(object):
         # self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         # self.line.setObjectName("line")
         self.txtCerca = QtWidgets.QLineEdit(formMagazzino)
-        self.txtCerca.setGeometry(QtCore.QRect(540, 10, 231, 31))
+        self.txtCerca.setGeometry(QtCore.QRect(540, 10, 191, 31))
         font = QtGui.QFont()
         font.setFamily("Georgia")
         font.setPointSize(12)
@@ -97,13 +97,17 @@ class Ui_formMagazzino(object):
         self.btVisualizzaTabellaNomi.setFont(font)
         self.btVisualizzaTabellaNomi.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btVisualizzaTabellaNomi.setObjectName("btVisualizzaTabellaNomi")
+        self.btRefresh = QPushButton(formMagazzino)
+        self.btRefresh.setObjectName(u"btRefresh")
+        self.btRefresh.setGeometry(QtCore.QRect(740, 10, 31, 31))
+        self.btRefresh.setStyleSheet(u"image: url(:/icone/Icons/refresh-ccw.svg);")
         self.btVisualizzaTabellaNomi.clicked.connect(self.btTabellaNomiClicked)
         self.tableMagazzino.setSortingEnabled(True)
         self.txtCerca.textChanged.connect(self.filtraTabella)
         QtCore.QMetaObject.connectSlotsByName(formMagazzino)
-
+        self.btRefresh.clicked.connect(self.btRefreshClicked)
         self.retranslateUi(formMagazzino)
-        self.init_db()
+        # self.init_db()
         self.load_data_tabella()
 
 
@@ -119,14 +123,15 @@ class Ui_formMagazzino(object):
         self.btVisualizzaTabellaNomi.setText(_translate("Dialog", "Visualizza schermata\n dei nomi"))
         self.tableMagazzino.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
 
-    def init_db(self):
-        self.db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="alessio",
-            database="mydbristorante",
-            port=3360 #QUESTO PER ME (cela), se vi da problemi toglietelo, io ho il db in una porta diversa
-        )
+    # def init_db(self):
+    #     pass
+        # self.db = mysql.connector.connect(
+        #     host="localhost",
+        #     user="root",
+        #     password="alessio",
+        #     database="mydbristorante",
+        #     port=3360 #QUESTO PER ME (cela), se vi da problemi toglietelo, io ho il db in una porta diversa
+        # )
 
     def load_data_tabella(self):
         self.txtCerca.setText("")
@@ -207,16 +212,17 @@ class Ui_formMagazzino(object):
             dlg = QMessageBox()
             dlg.setWindowTitle("Eliminazione elemento magazzino")
             dlg.setText(f"Sicuro di voler eliminare l'elemento del magazzino con nome: {self.tableMagazzino.item(selectedRow, 1).text()} del fornitore {self.tableMagazzino.item(selectedRow, 5).text()}")
-            cur = self.db.cursor()
             dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             dlg.setIcon(QMessageBox.Warning)
             button = dlg.exec()
 
             if button == QMessageBox.Yes:
                 query = f"DELETE FROM elementomagazzino WHERE id = {self.tableMagazzino.item(selectedRow, 0).text()}"
-                cur.execute(query)
-                self.db.commit()
+                GestoreDBMagazzino.eseguiQuery(query)
             self.load_data_tabella()
+
+    def btRefreshClicked(self):
+        self.load_data_tabella()
 
 
 

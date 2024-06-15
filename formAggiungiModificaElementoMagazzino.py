@@ -142,6 +142,16 @@ class Ui_formCU_elementoMagazzino(object):
         self.retranslateUi(formCU_elementoMagazzino)
         QtCore.QMetaObject.connectSlotsByName(formCU_elementoMagazzino)
 
+    def retranslateUi(self, formCU_elementoMagazzino):
+        _translate = QtCore.QCoreApplication.translate
+        formCU_elementoMagazzino.setWindowTitle(_translate("formCU_elementoMagazzino", "Dialog"))
+        self.label.setText(_translate("formCU_elementoMagazzino", "Nome:"))
+        self.label_2.setText(_translate("formCU_elementoMagazzino", "Prezzo:"))
+        self.label_3.setText(_translate("formCU_elementoMagazzino", "Quantità:"))
+        self.label_4.setText(_translate("formCU_elementoMagazzino", "Scadenza:"))
+        self.label_5.setText(_translate("formCU_elementoMagazzino", "Fornitore:"))
+        self.btEsegui.setText(_translate("formCU_elementoMagazzino", "Esegui operazione"))
+
     def btHelpClicked(self):
         dlg = QMessageBox()
         dlg.setWindowTitle("Info")
@@ -164,6 +174,14 @@ class Ui_formCU_elementoMagazzino(object):
 
 
     def btEseguiClicked(self):
+        indiceNomeSelezionato = self.listaNomi.currentRow()
+        Fornitore = self.txtFornitore.text().strip()
+        if indiceNomeSelezionato == -1:
+            self.showErrorMessage("Non é possibile inserire un elemento senza aver selezionato un nome.")
+            return
+        if not Fornitore:
+            self.showErrorMessage("Il campo 'Fornitore' non può essere vuoto.")
+            return
         dlg = QMessageBox()
         dlg.setWindowTitle("Conferma")
         dlg.setText("Sei sicuro di voler proseguire?")
@@ -171,34 +189,23 @@ class Ui_formCU_elementoMagazzino(object):
         dlg.setIcon(QMessageBox.Warning)
         button = dlg.exec()
         if button == QMessageBox.Yes:
+            idNomeElemento = self.listaIdNomi[indiceNomeSelezionato]
+            Prezzo = self.numberPrezzo.text()
+            Quantita = self.numberQuantita.text()
+            DataDiScadenza = self.dateEditScadenza.date().toString('yyyy-MM-dd')
             if self.idToUpdate == -1:
-                x = self.listaNomi.currentRow()
-                idNomeElemento = self.listaIdNomi[self.listaNomi.currentRow()]
-                Prezzo = self.numberPrezzo.text()
-                Quantita = self.numberQuantita.text()
-                DataDiScadenza = self.dateEditScadenza.date().toString('yyyy-MM-dd')
-                Fornitore = self.txtFornitore.text()
                 query = f"Insert into elementomagazzino(idNomeElemento, Prezzo, Quantita, Scadenza, Fornitore) values ({idNomeElemento}, {Prezzo}, {Quantita}, '{DataDiScadenza}', '{Fornitore}')"
                 GestoreDBMagazzino.eseguiQuery(query)
                 self.fCUelementoMagazzino.close()
             else:
-                x = self.listaNomi.currentRow()
-                idNomeElemento = self.listaIdNomi[self.listaNomi.currentRow()]
-                Prezzo = self.numberPrezzo.text()
-                Quantita = self.numberQuantita.text()
-                DataDiScadenza = self.dateEditScadenza.date().toString('yyyy-MM-dd')
-                Fornitore = self.txtFornitore.text()
                 query = f"UPDATE elementomagazzino SET idNomeElemento = {idNomeElemento}, Prezzo = {Prezzo}, Quantita = {Quantita}, Scadenza = '{DataDiScadenza}', Fornitore = '{Fornitore}' WHERE id = {self.idToUpdate}"
                 GestoreDBMagazzino.eseguiQuery(query)
                 self.fCUelementoMagazzino.close()
-        #TODO check per evitare di inserire valori nulli
 
-    def retranslateUi(self, formCU_elementoMagazzino):
-        _translate = QtCore.QCoreApplication.translate
-        formCU_elementoMagazzino.setWindowTitle(_translate("formCU_elementoMagazzino", "Dialog"))
-        self.label.setText(_translate("formCU_elementoMagazzino", "Nome:"))
-        self.label_2.setText(_translate("formCU_elementoMagazzino", "Prezzo:"))
-        self.label_3.setText(_translate("formCU_elementoMagazzino", "Quantità:"))
-        self.label_4.setText(_translate("formCU_elementoMagazzino", "Scadenza:"))
-        self.label_5.setText(_translate("formCU_elementoMagazzino", "Fornitore:"))
-        self.btEsegui.setText(_translate("formCU_elementoMagazzino", "Esegui operazione"))
+    def showErrorMessage(self, message):
+        dlg = QMessageBox()
+        dlg.setWindowTitle("Errore")
+        dlg.setText(message)
+        dlg.setIcon(QMessageBox.Critical)
+        dlg.exec()
+
