@@ -78,9 +78,11 @@ class Ui_Dialog(object):
 #         self.btIndietro.setText("")
 #         self.btIndietro.setObjectName("btIndietro")
 #         self.btIndietro.clicked.connect(self.btIndietroClicked)
+        self.tableNomi.verticalHeader().setVisible(False)
         self.btInserisciNome.clicked.connect(self.btInserisciNomeClicked)
         self.btModificaNome.clicked.connect(self.btModificaNomeClicked)
         self.btEliminaNome.clicked.connect(self.btEliminaNomeClicked)
+        self.tableMagazzino.setSortingEnabled(True)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 

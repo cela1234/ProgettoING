@@ -107,6 +107,7 @@ class Ui_formMagazzino(object):
         QtCore.QMetaObject.connectSlotsByName(formMagazzino)
         self.btRefresh.clicked.connect(self.btRefreshClicked)
         self.retranslateUi(formMagazzino)
+        self.tableMagazzino.verticalHeader().setVisible(False)
         # self.init_db()
         self.load_data_tabella()
 

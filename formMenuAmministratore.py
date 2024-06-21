@@ -358,6 +358,7 @@ class Ui_formAmministratore(object):
         self.uiMagazzino.setupUi(self.formGestioneMagazzino, formAmm)
         self.formGestioneMagazzino.show()
         formAmm.hide()
+        
 
 
 
