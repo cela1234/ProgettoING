@@ -82,7 +82,7 @@ class Ui_Dialog(object):
         self.btInserisciNome.clicked.connect(self.btInserisciNomeClicked)
         self.btModificaNome.clicked.connect(self.btModificaNomeClicked)
         self.btEliminaNome.clicked.connect(self.btEliminaNomeClicked)
-        self.tableMagazzino.setSortingEnabled(True)
+        self.tableNomi.setSortingEnabled(True)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 

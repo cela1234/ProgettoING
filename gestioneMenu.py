@@ -18,10 +18,12 @@ import formAggiungiModificaElementoMagazzino
 from datetime import datetime, date
 import classi.GestoriDB.GestoreProdottiMenu as GestoreDBMenu
 import Resources.icons
+import DettaglioProdotto
 
 
 class Ui_formGestioneMenu(object):
     def setupUi(self, formGestioneMenu):
+        self.fGestioneMenu = formGestioneMenu
         formGestioneMenu.setObjectName("formGestioneMenu")
         formGestioneMenu.resize(783, 570)
         formGestioneMenu.setStyleSheet("background-color: rgb(159, 197, 248);")
@@ -77,6 +79,7 @@ class Ui_formGestioneMenu(object):
         self.btModificaProdotto.clicked.connect(self.btModificaProdottoClicked)
         self.btRefresh.clicked.connect(self.btRefreshClicked)
         self.txtCerca.textChanged.connect(self.txtCercaChanged)
+        self.btMostraDettaglio.clicked.connect(self.btMostraDettaglioClicked)
 
 
         self.retranslateUi(formGestioneMenu)
@@ -107,6 +110,17 @@ class Ui_formGestioneMenu(object):
                 else:
                     self.tableProdotti.setItem(row_number, column_number, QTableWidgetItem(str(data)))
         self.tableProdotti.resizeColumnsToContents()
+
+    def btMostraDettaglioClicked(self):
+        selectedRow = self.tableProdotti.currentRow()
+        self.fGestioneMenu.setEnabled(False)
+        self.DettaglioProdotto = QtWidgets.QDialog()
+        self.uiDettaglioProdotto = DettaglioProdotto.Ui_DettaglioProdotto()
+        self.uiDettaglioProdotto.setupUi(self.DettaglioProdotto, int(self.tableProdotti.item(self.tableProdotti.currentRow(), 0).text()))
+        # self.uiDettaglioProdotto.idProdotto = int(self.tableProdotti.item(self.tableProdotti.currentRow(), 0).text())
+        self.DettaglioProdotto.exec_()
+        self.fGestioneMenu.setEnabled(True)
+        self.load_data_tabella()
 
     def btModificaProdottoClicked(self):
         pass
