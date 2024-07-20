@@ -72,6 +72,15 @@ class Ui_formGestioneMenu(object):
         self.btModificaProdotto.setStyleSheet("background-color: rgb(245, 243, 201);")
         self.btModificaProdotto.setObjectName("btModificaProdotto")
 
+        self.btEliminaProdotto = QtWidgets.QPushButton(formGestioneMenu)
+        self.btEliminaProdotto.setGeometry(QtCore.QRect(540, 250, 231, 41))
+        font = QtGui.QFont()
+        font.setFamily("Georgia")
+        font.setPointSize(14)
+        self.btEliminaProdotto.setFont(font)
+        self.btEliminaProdotto.setStyleSheet("background-color: rgb(245, 243, 201);")
+        self.btEliminaProdotto.setObjectName("btModificaProdotto")
+
         self.tableProdotti.setColumnCount(5)
         self.tableProdotti.verticalHeader().setVisible(False)
         self.tableProdotti.setHorizontalHeaderLabels(["id", "Nome", "Descrizione", "Prezzo", "Categoria"])
@@ -80,6 +89,7 @@ class Ui_formGestioneMenu(object):
         self.btRefresh.clicked.connect(self.btRefreshClicked)
         self.txtCerca.textChanged.connect(self.txtCercaChanged)
         self.btMostraDettaglio.clicked.connect(self.btMostraDettaglioClicked)
+        self.btEliminaProdotto.clicked.connect(self.btEliminaProdottoClicked)
 
 
         self.retranslateUi(formGestioneMenu)
@@ -95,6 +105,7 @@ class Ui_formGestioneMenu(object):
 "prodotto selezionato"))
         self.btInserisciProdotto.setText(_translate("formGestioneMenu", "Inserisci Prodotto"))
         self.btModificaProdotto.setText(_translate("formGestioneMenu", "Modifica Prodotto"))
+        self.btEliminaProdotto.setText(_translate("formGestioneMenu", "Elimina Prodotto"))
 
     def load_data_tabella(self):
         self.txtCerca.setText("")
@@ -130,6 +141,30 @@ class Ui_formGestioneMenu(object):
 
     def btRefreshClicked(self):
         self.load_data_tabella()
+
+    def btEliminaProdottoClicked(self):
+        selectedRow = self.tableProdotti.currentRow()
+        if selectedRow == -1:
+            dlg = QMessageBox()
+            dlg.setWindowTitle("Errore")
+            dlg.setText("Non hai selezionato nessun elemento!")
+            dlg.setStandardButtons(QMessageBox.Ok)
+            dlg.setIcon(QMessageBox.Critical)
+            dlg.exec()
+        else:
+            idProdotto = self.tableProdotti.item(selectedRow, 0).text()
+            dlg = QMessageBox()
+            dlg.setWindowTitle("Eliminazione prodotto menu")
+            dlg.setText(
+                f"Sicuro di voler eliminare il prodotto dal menu con nome: \"{self.tableProdotti.item(selectedRow, 1).text()}\" ?")
+            dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            dlg.setIcon(QMessageBox.Warning)
+            button = dlg.exec()
+
+            if button == QMessageBox.Yes:
+                query = f"UPDATE prodottomenu SET eliminato = 1 WHERE id = {idProdotto}" #eliminazione del prodotto
+                GestoreDBMenu.eseguiQuery(query)
+            self.load_data_tabella()
 
     def txtCercaChanged(self):
         ricerca = self.txtCerca.text().lower()

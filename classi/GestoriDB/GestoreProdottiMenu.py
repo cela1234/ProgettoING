@@ -35,7 +35,7 @@ def ottieniElementiTabellaProdottiMenu():
             port = DB_PORT
         )
         cursor = myconn.cursor()
-        query = "Select id, nome, descrizione, prezzo, categoria from prodottomenu"
+        query = "Select id, nome, descrizione, prezzo, categoria from prodottomenu WHERE eliminato = 0"
         cursor.execute(query)
         elementiMagazzino = cursor.fetchall()
         return elementiMagazzino
@@ -52,3 +52,22 @@ def ottieniProdottoSpecifico(id):
 def ottieniIngredientiProdotto(id):
     query = f"select nomeelemento.nome, ingredienteprodotto.Quantita, nomeelemento.piccante, nomeelemento.vegano, nomeelemento.intolleranze FROM ingredienteprodotto INNER JOIN nomeelemento ON nomeelemento.id = ingredienteprodotto.idNomeElemento WHERE ingredienteprodotto.idProdotto = {id}"
     return eseguiQuerySELECT(query)
+
+def eseguiQuery(query): #eseguiQuery è per le query che fanno modifiche al database ma non restituiscono niente
+    try:
+        myconn = mysql.connector.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            passwd = DB_PASSWORD,
+            database = DB_DATABASE,
+            port = DB_PORT
+        )
+        cursor = myconn.cursor()
+        cursor.execute(query)
+        myconn.commit()
+        return "corretto"
+    except mysql.connector.Error as err:
+        print(f"Errore durante l'esecuzione del comando: {err}")
+        return err
+    finally:
+        myconn.close()

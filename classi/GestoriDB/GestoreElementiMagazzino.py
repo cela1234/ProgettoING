@@ -41,7 +41,7 @@ def eseguiQuery(query): #eseguiQuery è per le query che fanno modifiche al data
         myconn.commit()
         return "corretto"
     except mysql.connector.Error as err:
-        print(f"Errore durante l'ottenimento delle informazioni: {err}")
+        print(f"Errore durante l'esecuzione del comando: {err}")
         return err
     finally:
         myconn.close()
