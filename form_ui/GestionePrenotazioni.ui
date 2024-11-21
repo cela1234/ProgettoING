@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1252</width>
+    <height>599</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(159, 197, 248);</string>
+  </property>
+  <widget class="QLabel" name="lbl_titolo_gest_pren">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>311</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Georgia</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Gestione Prenotazioni</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="twPrenotazioni">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>80</y>
+     <width>602</width>
+     <height>471</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Georgia</family>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(240, 236, 95);</string>
+   </property>
+   <column>
+    <property name="text">
+     <string>Nome Cliente</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Tavolo</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Sala</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Orario</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>N° Coperti</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Codice</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QPushButton" name="bt_modifica_prenot">
+   <property name="geometry">
+    <rect>
+     <x>1070</x>
+     <y>160</y>
+     <width>161</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Georgia</family>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(245, 243, 201);</string>
+   </property>
+   <property name="text">
+    <string>Modifica Prenotazione</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bt_elimina_prenot">
+   <property name="geometry">
+    <rect>
+     <x>1070</x>
+     <y>400</y>
+     <width>161</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Georgia</family>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 0, 0);</string>
+   </property>
+   <property name="text">
+    <string>Elimina Prenotazione</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bt_aggiung_prenot">
+   <property name="geometry">
+    <rect>
+     <x>1070</x>
+     <y>280</y>
+     <width>161</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Georgia</family>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(170, 255, 127);</string>
+   </property>
+   <property name="text">
+    <string>Aggiungi Prenotazione</string>
+   </property>
+  </widget>
+  <widget class="QCalendarWidget" name="calendario_gest_prenot">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>120</y>
+     <width>411</width>
+     <height>431</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Georgia</family>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(240, 236, 95);</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="tbCerca">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>80</y>
+     <width>141</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="placeholderText">
+    <string>Cerca per nome</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>80</y>
+     <width>241</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cerca in tutte le date future</string>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="Risorse/Icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

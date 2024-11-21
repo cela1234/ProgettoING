@@ -1,19 +1,10 @@
 import mysql
 import mysql.connector
-DB_HOST = "localhost"
-DB_USER = "root"
-DB_PASSWORD = "alessio"
-DB_DATABASE = "mydbristorante"
-DB_PORT = 3360
+from db_connection import get_connection
+
 def ottieniElementiTabellaMagazzino():
     try:
-        myconn = mysql.connector.connect(
-            host=DB_HOST,
-            user=DB_USER,
-            passwd = DB_PASSWORD,
-            database = DB_DATABASE,
-            port = DB_PORT
-        )
+        myconn = get_connection()
         cursor = myconn.cursor()
         query = """select elementomagazzino.id, nome, prezzo, quantita, scadenza, fornitore
         from elementomagazzino inner join nomeelemento
@@ -29,13 +20,7 @@ def ottieniElementiTabellaMagazzino():
 
 def eseguiQuery(query): #eseguiQuery è per le query che fanno modifiche al database ma non restituiscono niente
     try:
-        myconn = mysql.connector.connect(
-            host=DB_HOST,
-            user=DB_USER,
-            passwd = DB_PASSWORD,
-            database = DB_DATABASE,
-            port = DB_PORT
-        )
+        myconn = get_connection()
         cursor = myconn.cursor()
         cursor.execute(query)
         myconn.commit()
@@ -44,17 +29,12 @@ def eseguiQuery(query): #eseguiQuery è per le query che fanno modifiche al data
         print(f"Errore durante l'esecuzione del comando: {err}")
         return err
     finally:
-        myconn.close()
+        if(myconn):
+            myconn.close()
 
 def eseguiQuerySELECT(query):
     try:
-        myconn = mysql.connector.connect(
-            host=DB_HOST,
-            user=DB_USER,
-            passwd=DB_PASSWORD,
-            database=DB_DATABASE,
-            port=DB_PORT
-        )
+        myconn = get_connection()
         cursor = myconn.cursor()
         cursor.execute(query)
         risultato = cursor.fetchall()
